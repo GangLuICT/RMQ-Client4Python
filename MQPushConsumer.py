@@ -5,7 +5,7 @@ import os
 import logging
 import jpype
 
-__all__ = ["PushConsumer"]
+__all__ = ["MQPushConsumer"]
 
 DefaultMQPushConsumer= jpype.JPackage('com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer')
 MQClientException = jpype.JPackage('com.alibaba.rocketmq.client.exception.MQClientException')
@@ -15,7 +15,8 @@ ConsumeConsurrentlyContext = jpype.JPackage('com.alibaba.rocketmq.client.consume
 ConsumeConsurrentlyStatus = jpype.JPackage('com.alibaba.rocketmq.client.consumer.listener.ConsumeConsurrentlyStatus')
 MessageListenerConcurrently = jpype.JPackage('com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently')
 
-class PushConsumer(object):
+
+class MQPushConsumer(object):
     
     def ___init__(self):
     
