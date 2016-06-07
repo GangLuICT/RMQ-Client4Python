@@ -34,7 +34,6 @@ class MQPushConsumer(object):
         self.namesrvAddr = namesrvAddr
         self.instanceName = str(int(time.time()*1000))  #毫秒值作为instance name
 
-    @classmethod
     def init(self):
         """批量设置一些基本项(为了尽可能少实现这些API接口,如以后有需要,可以逐个移出init)"""
         logger.info('Initializing consumer ' + self.instanceName + ' ...')
@@ -42,7 +41,6 @@ class MQPushConsumer(object):
         self.consumer.setNamesrvAddr(JString(self.namesrvAddr))
         self.consumer.setInstanceName(JString(self.instanceName))
 
-    @classmethod
     def start(self):
         """
     # JAVA prototype
@@ -51,7 +49,6 @@ class MQPushConsumer(object):
         logger.info('Starting consumer ' + self.instanceName + ' ...')
         self.consumer.start()
 
-    @classmethod
     def shutdown(self):
         """
     # JAVA prototype
@@ -60,7 +57,6 @@ class MQPushConsumer(object):
         logger.info('Shutting down consumer ' + self.instanceName + ' ...')
         self.consumer.shutdown()
 
-    @classmethod
     def setMessageModel(self, messageModel):
         """
     # JAVA prototype
@@ -69,26 +65,22 @@ class MQPushConsumer(object):
         logger.info('Setting message model of instance ' + self.instanceName + ' to ' + messageModel)
         self.consumer.setMessageModel(JInt(messageModel))
 
-    @classmethod
     def subscribe(self, topic, subExpression):
     # JAVA prototype
     #    public void subscribe(String topic, String subExpression) throws MQClientException {
     #    public void subscribe(String topic, String fullClassName, String filterClassSource) throws MQClientException {
         self.consumer.subscribe(JString(topic), JString(subExpression))
 
-    @classmethod
     def unsubscribe(self, topic):
     # JAVA prototype
     #    public void unsubscribe(String topic) {
         self.consumer.unsubscribe(JString(topic))
 
-    @classmethod
     def setConsumeFromWhere(self, fromwhere):
     # JAVA prototype
     #    public void setConsumeFromWhere(ConsumeFromWhere consumeFromWhere) {
         self.consumer.setConsumeFromWhere(JInt(fromwhere))
 
-    @classmethod
     def registerMessageListener(self, listener):
     # JAVA prototype
     #    public void registerMessageListener(MessageListenerConcurrently messageListener) {

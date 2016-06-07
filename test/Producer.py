@@ -35,11 +35,17 @@ if __name__ == '__main__':
     producer = MQProducer('MQClient4Python-Producer', 'jfxr-7:9876;jfxr-6:9876')
     producer.init()
     producer.start()
-    MQMsg = MQMessage('TopicTest',  # topic
+    MQMsg = MQMessage('RMQTopicTest',  # topic
                   'TagB',   # tag
                   'OrderID001',   # key
                   'Hello, RocketMQ!')  # body
     producer.send(MQMsg)
+    MQMsg = MQMessage('RMQTopicTest',  # topic
+                  'TagC',   # tag
+                  'OrderID001',   # key
+                  'Hello, RocketMQ! I am 陆钢')  # body
+    producer.send(MQMsg)
+
     producer.shutdown()
 
     shutdownJVM()

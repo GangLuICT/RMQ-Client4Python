@@ -7,7 +7,7 @@ import time
 
 logger = logging.getLogger("MQPullConsumer")
 
-__all__ = ["MQPullConsumer", "getMessageQueueOffset", "putMessageQueueOffset"]
+__all__ = ["MQPullConsumer"]
 
 DefaultMQPullConsumer= JPackage('com.alibaba.rocketmq.client.consumer').DefaultMQPullConsumer
 MQClientException = JPackage('com.alibaba.rocketmq.client.exception').MQClientException
@@ -31,7 +31,6 @@ class MQPullConsumer(object):
         self.mqs = None
         self.offseTable = {}    # map of message queue id to queue offset
 
-    @classmethod
     def init(self):
         """批量设置一些基本项(为了尽可能少实现这些API接口,如以后有需要,可以逐个移出init)"""
         logger.info('Initializing consumer ' + self.instanceName + ' ...')
@@ -39,7 +38,6 @@ class MQPullConsumer(object):
         self.consumer.setNamesrvAddr(JString(self.namesrvAddr))
         self.consumer.setInstanceName(JString(self.instanceName))
 
-    @classmethod
     def start(self):
         """
     # JAVA prototype
@@ -48,7 +46,6 @@ class MQPullConsumer(object):
         logger.info('Starting consumer ' + self.instanceName + ' ...')
         self.consumer.start()
 
-    @classmethod
     def shutdown(self):
         """
     # JAVA prototype
@@ -57,7 +54,6 @@ class MQPullConsumer(object):
         logger.info('Shutting down consumer ' + self.instanceName + ' ...')
         self.consumer.shutdown()
 
-    @classmethod
     def pullBlockIfNotFound(self, mq, subExpression, offset, maxNums):
         """
     # JAVA prototype
@@ -69,7 +65,6 @@ class MQPullConsumer(object):
         pullResult = self.consumer.pullBlockIfNotFound(mq, subExpression, self.getMessageQueueOffset(mq), maxNums)
         return pullResult
 
-    @classmethod
     def fetchSubscribeMessageQueues(self, topic):
         """
     # JAVA prototype
@@ -77,20 +72,18 @@ class MQPullConsumer(object):
         """
         self.mqs = self.consumer.fetchSubscribeMessageQueues(JString(topic))
 
-    @classmethod
     def getMessageQueueOffset(self, mq):
         """
         获取某个MQ中的当前消息的offset
         :param mq:
         :return:
         """
-        offset = self.offseTable[mq.queueId]
-        if offset != None:
-            return offset
+	haskey = self.offseTable.has_key(mq.queueId)
+        if haskey:
+            return self.offseTable[mq.queueId]
         else:
             return 0
 
-    @classmethod
     def putMessageQueueOffset(self, mq, offset):
         """
         设置某个MQ中的当前消息的offset(更新后的值)

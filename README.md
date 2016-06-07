@@ -7,4 +7,3 @@ JAVA libraries:
     RocketMQ libs
 Python libraries:
     jpype
-    goto
