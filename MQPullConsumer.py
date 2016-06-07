@@ -17,7 +17,7 @@ MessageQueue = jpype.JPackage('com.alibaba.rocketmq.common.message.MessageQueue'
 
 class MQPullConsumer(object):
     
-    def ___init__(self, groupName, namesrvAddr):
+    def __init__(self, groupName, namesrvAddr):
         """
         :param groupName:
         :param namesrvAddr:

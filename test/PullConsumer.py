@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+#导入上级目录模块
+import sys
+sys.path.append("..")
+
 from jpype import *
 from MQPullConsumer import *
 from MQMessage import MQMessage, PULLSTATUS

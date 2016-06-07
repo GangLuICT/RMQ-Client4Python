@@ -3,6 +3,7 @@
 
 from jpype import *
 import logging
+import settings_MQ as settings
 
 logger = logging.getLogger("MQMessage")
 
@@ -17,7 +18,12 @@ class MQMessage(object):
         self.tags = tags
         self.keys = keys
         self.body = body
-        self.msg = Message(JString(self.topic), JString(self.tags), JString(self.keys), JByte(self.body))
+        self.msg = Message(JString(self.topic), JString(self.tags), JString(self.keys), self.body.encode(encoding = settings.MsgBodyEncoding))
+	# JAVA prototype of Message
+	#    public Message()
+	#    public Message(String topic, byte[] body)
+	#    public Message(String topic, String tags, String keys, byte[] body)
+	#    public Message(String topic, String tags, String keys, int flag, byte[] body, boolean waitStoreMsgOK) 
     
     def tostr(self):
         """

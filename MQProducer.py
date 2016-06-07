@@ -13,9 +13,8 @@ DefaultMQProducer = JPackage('com.alibaba.rocketmq.client.producer').DefaultMQPr
 MQClientException = JPackage('com.alibaba.rocketmq.client.exception').MQClientException
 SendResult = JPackage('com.alibaba.rocketmq.client.producer').SendResult
 
-
 class MQProducer(object):
-    def ___init__(self, groupName, namesrvAddr):
+    def __init__(self, groupName, namesrvAddr):
         """
         :param groupName:
         :param namesrvAddr:
@@ -38,7 +37,7 @@ class MQProducer(object):
         self.producer = DefaultMQProducer(JString(self.groupName))   #创建实例
         self.producer.setNamesrvAddr(JString(self.namesrvAddr))
         self.producer.setInstanceName(JString(self.instanceName))
-        self.producer.setCompressMsgBodyOverHowmuch(JString(self.compressMsgBodyOverHowmuch))
+        self.producer.setCompressMsgBodyOverHowmuch(JInt(self.compressMsgBodyOverHowmuch))
 
     def start(self):
         """

@@ -18,7 +18,7 @@ MessageListenerConcurrently = jpype.JPackage('com.alibaba.rocketmq.client.consum
 
 class MQPushConsumer(object):
     
-    def ___init__(self):
+    def __init__(self):
     
     def start(self):
     # JAVA prototype
