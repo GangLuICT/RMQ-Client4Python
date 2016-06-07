@@ -9,6 +9,7 @@ import sys
 sys.path.append("..")
 import settings_MQ as settings
 
+#启动JVM
 from jpype import *
 jvmPath = getDefaultJVMPath()
 startJVM(jvmPath, settings.JVM_OPTIONS, "-Djava.ext.dirs="+settings.JAVA_EXT_DIRS)

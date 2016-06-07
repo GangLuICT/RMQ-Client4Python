@@ -9,10 +9,10 @@ logger = logging.getLogger("MQPullConsumer")
 
 __all__ = ["MQPullConsumer", "getMessageQueueOffset", "putMessageQueueOffset"]
 
-DefaultMQPullConsumer= jpype.JPackage('com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer')
-MQClientException = jpype.JPackage('com.alibaba.rocketmq.client.exception.MQClientException')
-PullResult = jpype.JPackage('com.alibaba.rocketmq.client.consumer.PullResult')
-MessageQueue = jpype.JPackage('com.alibaba.rocketmq.common.message.MessageQueue')
+DefaultMQPullConsumer= JPackage('com.alibaba.rocketmq.client.consumer').DefaultMQPullConsumer
+MQClientException = JPackage('com.alibaba.rocketmq.client.exception').MQClientException
+PullResult = JPackage('com.alibaba.rocketmq.client.consumer').PullResult
+MessageQueue = JPackage('com.alibaba.rocketmq.common.message').MessageQueue
 
 
 class MQPullConsumer(object):
