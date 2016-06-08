@@ -60,7 +60,7 @@ if __name__ == '__main__':
                             logger.debug(msg.toString())
                             # In Python 2.x, bytes is just an alias for str. 所以bytes解码时要注意了, msg.body.decode会出错！
                             #logger.debug("Message body: " + str(msg.body))
-                            #logger.debug("Message body: " + str(msg.body).decode(settings.MsgBodyEncoding))
+                            logger.debug("Message body: " + str(msg.body).decode(settings.MsgBodyEncoding))
                             #TODO: 进一步分析pull下来的result
                     elif pullStatus == PullStatus['NO_NEW_MSG']:
                         logger.debug('NO_NEW_MSG')
