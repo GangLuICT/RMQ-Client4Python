@@ -27,19 +27,27 @@ if sys.getdefaultencoding() != 'utf-8':
     reload(sys)
     sys.setdefaultencoding('utf-8');
 
+import time
+
 if __name__ == '__main__':
     consumer = MQPushConsumer('MQClient4Python-Consumer', 'jfxr-7:9876;jfxr-6:9876')
     consumer.init()
 
-    consumer.setMessageModel(MessageModel['CLUSTERING'])    # 默认是BROADCASTING
+    consumer.setMessageModel(MessageModel['CLUSTERING'])    # 默认是CLUSTERING
+    #consumer.setMessageModel(MessageModel.CLUSTERING)    # 默认是CLUSTERING
 
-    consumer.subscribe("TopicTest", "TagB")
+    consumer.subscribe("RMQTopicTest", "TagB")
 
     consumer.setConsumeFromWhere(ConsumeFromWhere['CONSUME_FROM_LAST_OFFSET'])
+    #consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET)
 
-    consumer.registerMessageListener(msgListenerConcurrently)
+    #consumer.registerMessageListener(msgListenerConcurrentlyProxy)
+    consumer.registerMessageListener(msgListenerOrderlyProxy)
 
     consumer.start()
+
+    while True:
+	time.sleep(1)
 
     #监听状态时不需要shutdown,除非真实想退出!
     #consumer.shutdown()

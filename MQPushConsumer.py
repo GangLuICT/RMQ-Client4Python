@@ -4,10 +4,11 @@
 from jpype import *
 import logging
 import time
+import settings_MQ as settings
 
 logger = logging.getLogger("MQPullConsumer")
 
-__all__ = ["MQPushConsumer", "msgListenerConcurrently", "msgListenerOrderly"]
+__all__ = ["MQPushConsumer", "msgListenerConcurrentlyProxy", "msgListenerOrderlyProxy"]
 
 DefaultMQPushConsumer= JPackage('com.alibaba.rocketmq.client.consumer').DefaultMQPushConsumer
 MQClientException = JPackage('com.alibaba.rocketmq.client.exception').MQClientException
@@ -62,8 +63,9 @@ class MQPushConsumer(object):
     # JAVA prototype
     #    public void setMessageModel(MessageModel messageModel)
         """
-        logger.info('Setting message model of instance ' + self.instanceName + ' to ' + messageModel)
-        self.consumer.setMessageModel(JInt(messageModel))
+        logger.info('Setting message model of instance ' + self.instanceName + ' to ' + str(messageModel))
+        #self.consumer.setMessageModel(JObject(messageModel, "com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel"))
+        self.consumer.setMessageModel(messageModel)
 
     def subscribe(self, topic, subExpression):
     # JAVA prototype
@@ -79,7 +81,8 @@ class MQPushConsumer(object):
     def setConsumeFromWhere(self, fromwhere):
     # JAVA prototype
     #    public void setConsumeFromWhere(ConsumeFromWhere consumeFromWhere) {
-        self.consumer.setConsumeFromWhere(JInt(fromwhere))
+        #self.consumer.setConsumeFromWhere(JObject(fromwhere, "com.alibaba.rocketmq.common.consumer.ConsumeFromWhere"))
+        self.consumer.setConsumeFromWhere(fromwhere)
 
     def registerMessageListener(self, listener):
     # JAVA prototype
@@ -95,27 +98,45 @@ class MessageListenerConcurrently:
     def consumeMessage(self, msgs, context):
     # JAVA prototype
     #    ConsumeConcurrentlyStatus consumeMessage(final List<MessageExt> msgs, final ConsumeConcurrentlyContext context);
-        msg = msgs.get(JInt(0))
-        if msg.getTopic() == "TopicTest":
-            # 执行TopicTest的消费逻辑
-            if msg.getTags() == "TagA":
-                # 执行TagA的消费
-                logger.debug("Got message with topic " + msg.getTopic() + " and tags " + msg.getTags)
-            elif msg.getTags() == "TagC":
-                # 执行TagC的消费
-                logger.debug("Got message with topic " + msg.getTopic() + " and tags " + msg.getTags)
-            elif msg.getTags() == "TagD":
-                # 执行TagD的消费
-                logger.debug("Got message with topic " + msg.getTopic() + " and tags " + msg.getTags)
-        elif msg.getTopic() == "TopicTest1":
-            # 执行TopicTest1的消费逻辑
-            logger.debug("Got message with topic " + msg.getTopic() + " and tags " + msg.getTags)
+        logger.debug("Into consumerMessage of MessageListenerConcurrently")
+        #msg = msgs.get(JInt(0))
+	for msg in msgs:
+	    topic = msg.getTopic()
+            tags = msg.getTags()
+	    body = str(msg.getBody()).decode(settings.MsgBodyEncoding)
+
+	    logger.debug(msg.toString())
+            # In Python 2.x, bytes is just an alias for str. 所以bytes解码时要注意了, msg.body.decode会出错(bytes没有decode方法)！
+	    #logger.debug("Message body: " + str(msg.getBody()))
+            #logger.debug("Message body: " + str(msg.getBody()).decode(settings.MsgBodyEncoding))
+            logger.debug("Message body: " + body)
+
+            if topic == "RMQTopicTest":
+                # 执行TopicTest的消费逻辑
+                if tags == "TagA":
+                    # 执行TagA的消费
+                    logger.debug("Got message with topic " + topic + " and tags " + tags)
+                elif tags == "TagB":
+                    # 执行TagB的消费
+                    logger.debug("Got message with topic " + topic + " and tags " + tags)
+                elif tags == "TagC":
+                    # 执行TagC的消费
+                    logger.debug("Got message with topic " + topic + " and tags " + tags)
+                else:
+                    # 错误的Tag
+                    logger.error("Got message with topic " + topic + " and UNKNOWN tags " + tags)
+            elif topic == "TopicTest1":
+                # 执行TopicTest1的消费逻辑
+                logger.debug("Got message with topic " + topic + " and tags " + tags)
+            else:
+                logger.debug("Got message with UNKNOWN topic " + topic )
 
         return ConsumeConcurrentlyStatus['CONSUME_SUCCESS']
 
 #实现
 msgListenerConcurrently = MessageListenerConcurrently()
-JProxy("MessageListenerConcurrently", inst = msgListenerConcurrently)
+#JProxy("MessageListenerConcurrently", inst = msgListenerConcurrently)
+msgListenerConcurrentlyProxy = JProxy("com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently", inst = msgListenerConcurrently)
 
 class MessageListenerOrderly:
     '''接口类MessageListenerOrderly的实现
@@ -133,19 +154,29 @@ class MessageListenerOrderly:
         #TODO: msgs.toString()可能需要改成for msg in msgs: msg.toString()
 
         self.consumeTimes.incrementAndGet()
+        consumeTimes = self.consumeTimes.get()
+#	print consumeTimes
+#	print type(consumeTimes)
 
-        if (self.consumeTimes.get() % 2) == 0:
+        if (consumeTimes % 2) == 0:
+            logger.debug("consumeTimes % 2 = 0, return SUCCESS")
             return ConsumeOrderlyStatus['SUCCESS']
-        elif (self.consumeTimes.get() % 3) == 0:
+        elif (consumeTimes % 3) == 0:
+            logger.debug("consumeTimes % 3 = 0, return ROLLBACK")
             return ConsumeOrderlyStatus['ROLLBACK']
-        elif (self.consumeTimes.get() % 4) == 0:
+        elif (consumeTimes % 4) == 0:
+            logger.debug("consumeTimes % 4 = 0, return COMMIT")
             return ConsumeOrderlyStatus['COMMIT']
-        elif (self.consumeTimes.get() % 5) == 0:
+        elif (consumeTimes % 5) == 0:
+            logger.debug("consumeTimes % 5 = 0, return SUSPEND_CURRENT_QUEUE_A_MOMENT")
             context.setSuspendCurrentQueueTimeMillis(3000)
             return ConsumeOrderlyStatus['SUSPEND_CURRENT_QUEUE_A_MOMENT']
-
-        return ConsumeOrderlyStatus['SUCCESS']
+        else:
+            logger.debug("consumeTimes is not times of 2, 3, 4, 5, return SUCCESS")
+            return ConsumeOrderlyStatus['SUCCESS']
 
 #实现
 msgListenerOrderly = MessageListenerOrderly()
-JProxy("MessageListenerOrderly", inst = msgListenerOrderly)
+#JProxy("MessageListenerOrderly", inst = msgListenerOrderly)
+msgListenerOrderlyProxy = JProxy("com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly", inst = msgListenerOrderly)
+
