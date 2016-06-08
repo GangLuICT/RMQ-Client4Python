@@ -18,7 +18,8 @@ logger.info(java.lang.System.getProperty("java.class.path"))
 logger.info(java.lang.System.getProperty("java.ext.dirs"))
 
 #启动JVM之后才能调用JPackage,否则找不到相关的jar包
-from MQPushConsumer import *
+from MQPushConsumer import MQPushConsumer
+from MQMessageListener import msgListenerConcurrentlyProxy, msgListenerOrderlyProxy
 from MQMessage import ConsumeFromWhere, MessageModel
 
 # 为了支持文本中文输入，要显式设置编码；该编码不影响Message的Body的编码
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     consumer.start()
 
     while True:
-	time.sleep(1)
+        time.sleep(1)
 
     #监听状态时不需要shutdown,除非真实想退出!
     #consumer.shutdown()

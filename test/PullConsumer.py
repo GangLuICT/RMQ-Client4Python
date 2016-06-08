@@ -48,20 +48,20 @@ if __name__ == '__main__':
                     pullResult = consumer.pullBlockIfNotFound(mq, '', consumer.getMessageQueueOffset(mq), settings.pullMaxNums)	# brokerSuspendMaxTimeMillis默认值是20s
                     consumer.putMessageQueueOffset(mq, pullResult.getNextBeginOffset())
                     pullStatus = PullStatus[str(pullResult.getPullStatus())]	# JAVA中的enum对应到Python中没有转换为Int，enum对象转换为string的时候是其枚举值的名字，而不是enum的值（0,1...）！
-		    #print pullStatus
-		    #print type(pullStatus)
-		    #print type(PullStatus['NO_MATCHED_MSG'])
-		    #print pullStatus == PullStatus['NO_MATCHED_MSG']	# 比较对象时先将其转换成了string
+                    #print pullStatus
+                    #print type(pullStatus)
+                    #print type(PullStatus['NO_MATCHED_MSG'])
+                    #print pullStatus == PullStatus['NO_MATCHED_MSG']	# 比较对象时先将其转换成了string
                     if pullStatus == PullStatus['FOUND']:
                         logger.debug('Found')
                         logger.debug(pullResult.toString())
                         msgList = pullResult.getMsgFoundList()
                         for msg in msgList:
-			    logger.debug(msg.toString())
+                            logger.debug(msg.toString())
                             # In Python 2.x, bytes is just an alias for str. 所以bytes解码时要注意了, msg.body.decode会出错！
-			    #logger.debug("Message body: " + str(msg.body))
-			    logger.debug("Message body: " + str(msg.body).decode(settings.MsgBodyEncoding))
-                        #TODO: 进一步分析pull下来的result
+                            #logger.debug("Message body: " + str(msg.body))
+                            #logger.debug("Message body: " + str(msg.body).decode(settings.MsgBodyEncoding))
+                            #TODO: 进一步分析pull下来的result
                     elif pullStatus == PullStatus['NO_NEW_MSG']:
                         logger.debug('NO_NEW_MSG')
                         break
