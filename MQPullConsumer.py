@@ -78,7 +78,7 @@ class MQPullConsumer(object):
         :param mq:
         :return:
         """
-	haskey = self.offseTable.has_key(mq.queueId)
+        haskey = self.offseTable.has_key(mq.queueId)
         if haskey:
             return self.offseTable[mq.queueId]
         else:
