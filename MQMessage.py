@@ -12,6 +12,7 @@ __all__ = ["MQMessage", "PullStatus", "ConsumeFromWhere", "ConsumeConcurrentlySt
 
 Message = JPackage('com.alibaba.rocketmq.common.message').Message
 # enum classes:
+SENDSTATUS = JPackage('com.alibaba.rocketmq.client.producer').SendStatus
 PULLSTATUS = JPackage('com.alibaba.rocketmq.client.consumer').PullStatus
 CONSUMEFROMWHERE = JPackage('com.alibaba.rocketmq.common.consumer').ConsumeFromWhere
 CONSUMECONCURRENTLYSTATUS = JPackage('com.alibaba.rocketmq.client.consumer.listener').ConsumeConcurrentlyStatus
@@ -49,6 +50,18 @@ PullStatus = {
     'NO_MATCHED_MSG': PULLSTATUS.NO_MATCHED_MSG,
     #'OFFSET_ILLEGAL': 3   # Illegal offset，may be too big or too small
     'OFFSET_ILLEGAL': PULLSTATUS.OFFSET_ILLEGAL
+}
+
+# SendResult的返回结果
+SendStatus = {
+    #'SEND_OK': 0,
+    'SEND_OK': SENDSTATUS.SEND_OK,
+    #'FLUSH_DISK_TIMEOUT': 1,
+    'FLUSH_DISK_TIMEOUT': SENDSTATUS.FLUSH_DISK_TIMEOUT,
+    #'FLUSH_SLAVE_TIMEOUT': 2,
+    'FLUSH_SLAVE_TIMEOUT': SENDSTATUS.FLUSH_SLAVE_TIMEOUT,
+    #'SLAVE_NOT_AVAILABLE': 3
+    'SLAVE_NOT_AVAILABLE': SENDSTATUS.SLAVE_NOT_AVAILABLE
 }
 
 # PushConsumer消费时选择第一次订阅时的消费位置
