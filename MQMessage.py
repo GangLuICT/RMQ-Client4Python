@@ -7,7 +7,7 @@ import settings_MQ as settings
 
 logger = logging.getLogger("MQMessage")
 
-__all__ = ["MQMessage", "PullStatus", "ConsumeFromWhere", "ConsumeConcurrentlyStatus", "ConsumeOrderlyStatus",
+__all__ = ["MQMessage", "SendStatus", "PullStatus", "ConsumeFromWhere", "ConsumeConcurrentlyStatus", "ConsumeOrderlyStatus",
            "MessageModel"]
 
 Message = JPackage('com.alibaba.rocketmq.common.message').Message
