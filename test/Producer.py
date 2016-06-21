@@ -39,12 +39,12 @@ if __name__ == '__main__':
                   'TagB',   # tag
                   'OrderID001',   # key
                   'Hello, RocketMQ!')  # body
-    producer.send(MQMsg)
+    sendResult = producer.send(MQMsg)
     MQMsg = MQMessage('RMQTopicTest',  # topic
                   'TagC',   # tag
                   'OrderID001',   # key
                   'Hello, RocketMQ! I am 陆钢')  # body
-    producer.send(MQMsg)
+    sendResult = producer.send(MQMsg)
 
     producer.shutdown()
 

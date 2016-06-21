@@ -83,7 +83,7 @@ class MQProducer(object):
     #            long timeout) throws MQClientException, RemotingException, InterruptedException {
         """
         logger.debug('Producer ' + self.instanceName + ' sending message: ' + MQMsg.tostr())
-        self.producer.send(MQMsg.msg)
+        return self.producer.send(MQMsg.msg)
     
     def sendOneway(self, MQMsg):
         """
@@ -95,4 +95,4 @@ class MQProducer(object):
     #            RemotingException, InterruptedException {
         """
         logger.debug('Producer ' + self.instanceName + ' sending one-way message: ' + MQMsg.tostr())
-        self.producer.sendOneway(MQMsg.msg)
+        return self.producer.sendOneway(MQMsg.msg)
